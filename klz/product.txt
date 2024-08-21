@@ -1,0 +1,4 @@
+price=1999
+priceOld=2399
+rating=4.6
+reviewCount=222
