@@ -16,13 +16,13 @@ async function parseProduct(url, region) {
   // пропускаем если регион Москва и область, т.к. он дефолтный
   if (region !== 'Москва и область') {
     // клик кнопки регионов
-    await page.waitForSelector('.UiHeaderHorizontalBase_region__2ODCG', {
+    await page.waitForSelector('[class^="UiHeaderHorizontalBase_region"]', {
       visible: true,
       timeout: 0,
     });
-    await page.click('.UiHeaderHorizontalBase_region__2ODCG');
+    await page.click('[class^="UiHeaderHorizontalBase_region"]');
 
-    await page.waitForSelector('.UiRegionListBase_list__cH0fK', {
+    await page.waitForSelector('[class^="UiRegionListBase_list"]', {
       visible: true,
       timeout: 0,
     });
@@ -30,7 +30,7 @@ async function parseProduct(url, region) {
     // выбор региона в модалке
     const regionFound = await page.evaluate(async (region) => {
       const regionItems = Array.from(
-        document.querySelectorAll('.UiRegionListBase_item___ly_A')
+        document.querySelectorAll('[class^="UiRegionListBase_item"]')
       );
       const targetRegion = regionItems.find(
         (item) => item.innerText.trim() === region
@@ -77,17 +77,17 @@ async function parseProduct(url, region) {
 
   // скрываем лишнее
   await page.evaluate(() => {
-    const secondHeader = document.querySelector('.StickyPortal_root__5NZsr');
+    const secondHeader = document.querySelector('[class^="StickyPortal_root"]');
     if (secondHeader) {
       secondHeader.style.display = 'none';
     }
 
-    const tooltip = document.querySelector('.Tooltip_root__EMk_3');
+    const tooltip = document.querySelector('[class^="Tooltip_root"]');
     if (tooltip) {
       tooltip.style.display = 'none';
     }
 
-    const cookieAlert = document.querySelector('.CookiesAlert_policy__1ClsP');
+    const cookieAlert = document.querySelector('[class^="CookiesAlert_policy"]');
     if (cookieAlert) {
       cookieAlert.style.display = 'none';
     }
@@ -99,20 +99,20 @@ async function parseProduct(url, region) {
   // сбор данных о товаре
   const productInfo = await page.evaluate(() => {
     let price = document.querySelector(
-      '.Price_price__QzA8L.Price_size_XL__MHvC1.Price_role_discount__l_tpE'
+      '[class^="Price_price"][class*="Price_size_XL"][class*="Price_role_discount"]'
     );
     if (!price)
       price = document.querySelector(
-        '.Price_price__QzA8L.Price_size_XL__MHvC1.Price_role_regular__X6X4D'
+        '[class^="Price_price"][class*="Price_size_XL"][class*="Price_role_regular"]'
       );
 
     const oldPrice = document.querySelector(
-      '.Price_price__QzA8L.Price_size_XS__ESEhJ.Price_role_old__r1uT1'
+      '[class^="Price_price"][class*="Price_size_XS"][class*="Price_role_old"]'
     );
     const rating = document.querySelector(
-      '.Summary_title__lRoWU[itemprop="ratingValue"]'
+      '[class^="Summary_title"][itemprop="ratingValue"]'
     );
-    const reviews = document.querySelector('.ActionsRow_reviews__AfSj_');
+    const reviews = document.querySelector('[class^="ActionsRow_reviews_"]');
 
     return {
       price: price ? price.innerText : null,
